@@ -8,8 +8,11 @@ from preprocess import *
 
 def main():
     data = Data("adult.data")
-    data.readData()
-
-
+    unprocessedData = data.readData()
+    print(unprocessedData[0])
+    print(len(unprocessedData))
+    subset = data.getSubset(unprocessedData, 2000)
+    print(subset[0])
+    print(len(subset))
 if __name__ == "__main__":
     main()
