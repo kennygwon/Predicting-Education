@@ -8,8 +8,10 @@ from preprocess import *
 
 def main():
     data = Data("adult.data")
-    unprocessedData = data.readData()
-    unproccesedSubset = data.getSubset(unprocessedData, 2000)
-    X,y = data.splitXY(unprocessedSubset)
+    data.readData()
+    unprocessedSubset = data.getSubset(2000)
+    data.createSVMDataset()
+    print(data.SVMdata.shape)
+
 if __name__ == "__main__":
     main()
