@@ -9,9 +9,7 @@ from preprocess import *
 def main():
     data = Data("adult.data")
     data.readData()
-    unprocessedSubset = data.getSubset(2000)
     data.createSVMDataset()
-    print(data.SVMdata.shape)
 
 if __name__ == "__main__":
     main()

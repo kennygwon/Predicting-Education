@@ -14,7 +14,6 @@ class Data:
         Params - filename - name of file to be read in
         """
         self.filename = filename
-        self.rawData = None
         self.X = None 
         self.y = None
         self.SVMdata = None
@@ -30,7 +29,6 @@ class Data:
 
         #initializes our list of lists containing our data
         data = []
-        rawData = []
 
         #opens and reads the file
         f = open(self.filename, "r")
@@ -39,46 +37,34 @@ class Data:
         #appends each line to our list of lists
         for line in lines:
             featureValues = line.strip().split(", ")
-            if len(featureValues)  > 2:   #avoid empty lines
-                rawData.append(featureValues[:-1])
-            
-            #gets rid of the last line which is "\n"
-            if len(featureValues) > 2:
+
+            if len(featureValues) > 2:   # avoid empty lines
+                #remove features we don't care about
+                featureValues.pop(11) # remove capital-loss
+                featureValues.pop(10) # remove capital-gain
+                featureValues.pop(4) # remove education-num
                 education = featureValues.pop(3)
+                featureValues.pop(2) # remove fnlwgt
 
                 if (education in ["Preschool","1st-4th","5th-6th","7th-8th"]):
-                    data.append([0]+featureValues)
+                    data.append([0] + featureValues)
                 elif (education in ["9th", "10th", "11th", "12th"]):
-                    data.append([1]+featureValues)
+                    data.append([1] + featureValues)
                 elif(education == "HS-grad"):
-                    data.append([2]+featureValues)
+                    data.append([2] + featureValues)
                 elif(education == "Some-college"):
-                    data.append([3]+featureValues)
+                    data.append([3] + featureValues)
                 elif(education == "Bachelors"):
-                    data.append([4]+featureValues)
+                    data.append([4] + featureValues)
                 elif(education == "Masters"):
-                    data.append([5]+featureValues)
+                    data.append([5] + featureValues)
                 elif(education == "Doctorate"):
-                    data.append([6]+featureValues)
-                
-        #TODO: maybe keep track of all possible values for discrete features
-        #TODO: keep track of names and indices of discrete features
+                    data.append([6] + featureValues)
 
-        educationDictionary = {}
-        for index in range(len(data)):
-            try:
-                educationDictionary[data[index][0]]+=1
-            except:
-                educationDictionary[data[index][0]]=1
-
-        totalCount = 0
-        for key in list(educationDictionary.keys()):
-            totalCount += educationDictionary[key]
-
-        self.rawData = rawData
-        self.X, self.y  = self.splitXY(data)
-        print(educationDictionary)
-
+        self.rawData = data
+        dataSubset = self.getSubset(2000)
+        self.X, self.y  = self.splitXY(dataSubset)
+        
     def getSubset(self, numDataPoints):
         """
         Purpose - gets a random subset of specified size
@@ -116,13 +102,12 @@ class Data:
         Params - none
         Returns - nothing, but sets the self.SVMdata to the binarized features
         """
-        n = len(self.rawData)
-        p = 86 # length of new features
+        n = len(self.X)
+     
         newFeatures = []
-        #add features by category
+        #add each feature by category
         newFeatures.append('age')
         newFeatures.extend(['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked'])
-        newFeatures.append('education-num')
         newFeatures.extend(['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse'])
         newFeatures.extend(['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'])
         newFeatures.extend(['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 'Unmarried'])
@@ -130,42 +115,41 @@ class Data:
         newFeatures.extend(['Female', 'Male'])
         newFeatures.append('hours-per-week')
         newFeatures.extend(['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands'])
+        newFeatures.extend(['>50K','<=50K'])
+        p = len(newFeatures)
 
+        # assign each new feature an index in the new array
         newFeatureDict = {}
         for index in range(p):
             newFeatureDict[newFeatures[index]] = index
 
+        # figure out indices for continuous features in the new array
         contFeatureIndexer = {
-                                            0 : newFeatureDict['age'], 
-                                            1 : newFeatureDict['education-num'], 
-                                            2 : newFeatureDict['hours-per-week'] 
+                                0 : newFeatureDict['age'],
+                                1 : newFeatureDict['hours-per-week'] 
         }
         newData = np.zeros([n, p])        
 
         lineCounter = 0
-        for example in self.rawData:
+        for example in self.X:
 
             #print("Original example: \n", example)
-            example.pop(2) # remove fnlwgt
-            example.pop(2) # remove education
-            example.pop(9) # remove capital gain
-            example.pop(9) # remove capital loss
+
             #print("Example post-pop: \n", example)
 
             contFeatCounter = 0
             #print("New example-------------------------------------")
             for feature in example:
                 if feature.isdigit():
-                    # There are three continuous features after popping excessive features above
+                    # There are two continuous features after popping unnecessary features 
                     # We use the counter to index into our continuous feature indexing dictionary
                     # to determine which column index these lie in the larger feature index 
                     # dictionary
                     featureIndex = contFeatureIndexer[contFeatCounter]
                     #print("Feature index in newArray is ", featureIndex)
                     contFeatCounter += 1
-                    newData[lineCounter, featureIndex] = int(feature)
+                    newData[lineCounter, featureIndex] = float(feature)
                 elif feature == '?':
-                    #TODO: What if feature is missing? Doing nothing for now
                     pass
                 else:
                     # Feature not continuous - let's 
@@ -180,7 +164,8 @@ class Data:
 
     def createNBDataset(self):
         """
-        Purpose - This function binarizes the dataset for SVM use
+        Purpose - This function coverts continuous features to discrete ones 
+                  for use with Naive Bayes.
         Params - none
         Returns - nothing, but sets the self.SVMdata to the binarized features
         """
@@ -191,5 +176,20 @@ class Data:
         Purpose - This function binarizes the dataset for SVM use
         Params - none
         Returns - nothing, but sets the self.SVMdata to the binarized features
+        """
+        pass
+
+
+    def getSVMDataset(self):
+        """
+        """
+        pass
+
+    def createNBDataset(self):
+        """
+        """
+        pass
+    def createDTreeDataset(self):
+        """
         """
         pass
