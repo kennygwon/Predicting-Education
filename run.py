@@ -9,10 +9,7 @@ from preprocess import *
 def main():
     data = Data("adult.data")
     unprocessedData = data.readData()
-    print(unprocessedData[0])
-    print(len(unprocessedData))
-    subset = data.getSubset(unprocessedData, 2000)
-    print(subset[0])
-    print(len(subset))
+    unproccesedSubset = data.getSubset(unprocessedData, 2000)
+    X,y = data.splitXY(unprocessedSubset)
 if __name__ == "__main__":
     main()
