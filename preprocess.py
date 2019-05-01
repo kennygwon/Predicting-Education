@@ -14,11 +14,28 @@ class Data:
         Params - filename - name of file to be read in
         """
         self.filename = filename
-        self.X = None 
-        self.y = None
-        self.SVMdata = None
-        self.SVMlabels = None
+
+        self.rawData = None
+
+        #Train data
+        self.XTrain = None 
+        self.yTrain = None
+        #Validation data
+        self.XVal = None
+        self.yVal = None
+        #Test data
+        self.XTest = None
+        self.yTest = None
+
+        #SVM Data
+        self.SVMTrain = None
+        self.SVMTest = None
+        self.SVMValid = None
+
+        #Tree data
         self.DTreeData = None
+
+        #Naive Bayes Data
         self.NBdata = None
 
     def readData(self):
@@ -63,7 +80,19 @@ class Data:
 
         self.rawData = data
         dataSubset = self.getSubset(2000)
-        self.X, self.y  = self.splitXY(dataSubset)
+        self.rawData = self.splitXY(dataSubset)[0]
+
+        #creates the features and labels for the train data   
+        trainDataSubset = dataSubset[:1000]
+        self.XTrain, self.yTrain  = self.splitXY(trainDataSubset)
+
+        #creates the features and labels for the Test data
+        testData = dataSubset[1000:1500]
+        self.XTest, self.yTest = self.splitXY(testData)
+        
+        #creates the feature and labels for the validation set 
+        validData = dataSubset[1500:]
+        self.XVal, self.yVal = self.splitXY(validData)
         
     def getSubset(self, numDataPoints):
         """
@@ -102,7 +131,7 @@ class Data:
         Params - none
         Returns - nothing, but sets the self.SVMdata to the binarized features
         """
-        n = len(self.X)
+        n = len(self.rawData)
      
         newFeatures = []
         #add each feature by category
@@ -131,7 +160,7 @@ class Data:
         newData = np.zeros([n, p])        
 
         lineCounter = 0
-        for example in self.X:
+        for example in self.rawData:
 
             #print("Original example: \n", example)
 
@@ -160,7 +189,10 @@ class Data:
         # Now do labels
         # What are the labels? For SVM need binary classification task
         # Pre-processing complete, set SVMdata to new output
-        self.SVMdata = newData
+        
+        self.SVMTrain = newData[:1000]
+        self.SVMTest = newData[1000:1500]
+        self.SVMValid = newData[1500:]
 
     def createNBDataset(self):
         """
