@@ -194,14 +194,64 @@ class Data:
         self.SVMTest = newData[1000:1500]
         self.SVMValid = newData[1500:]
 
-    def createNBDataset(self):
+    def createNBDatasets(self):
         """
         Purpose - This function coverts continuous features to discrete ones 
-                  for use with Naive Bayes.
+                for use with Naive Bayes.
         Params - none
         Returns - nothing, but sets the self.SVMdata to the binarized features
         """
-        pass
+      
+        workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked', '?']
+        maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse', '?']
+        occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces', '?']
+        relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 'Unmarried', '?']
+        race = ['White', 'Asian-Pac-Islander', 'Amer-Indian-Eskimo', 'Other', 'Black', '?']
+        sex = ['Female', 'Male', '?']
+        country = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands', '?']
+        income = ['>50K','<=50K', '?']
+
+        trainn = len(self.trainX)
+        trainp = len(self.trainX[0])
+
+        nbDatasetTrain = np.zeros([trainn,trainp])
+
+      
+        for rowIndex in range(trainn):
+            personData = self.trainX[rowIndex]
+            nbDatasetTrain[rowIndex][0] = (float(personData[0])-15)//10
+            nbDatasetTrain[rowIndex][1] = workclass.index(personData[1])
+            nbDatasetTrain[rowIndex][2] = maritalStatus.index(personData[2])
+            nbDatasetTrain[rowIndex][3] = occupation.index(personData[3])
+            nbDatasetTrain[rowIndex][4] = relationship.index(personData[4])
+            nbDatasetTrain[rowIndex][5] = race.index(personData[5])
+            nbDatasetTrain[rowIndex][6] = sex.index(personData[6])
+            nbDatasetTrain[rowIndex][7] = float(personData[7])//10
+            nbDatasetTrain[rowIndex][8] = country.index(personData[8])
+            nbDatasetTrain[rowIndex][9] = income.index(personData[9])
+        self.NBdataTrain = nbDatasetTrain
+
+        testn = len(self.testX)
+        testp = len(self.testX[0])
+
+        nbDatasetTest = np.zeros([testn,testp])
+
+      
+        for rowIndex in range(testn):
+            personData = self.testX[rowIndex]
+            nbDatasetTest[rowIndex][0] = (float(personData[0])-15)//10
+            nbDatasetTest[rowIndex][1] = workclass.index(personData[1])
+            nbDatasetTest[rowIndex][2] = maritalStatus.index(personData[2])
+            nbDatasetTest[rowIndex][3] = occupation.index(personData[3])
+            nbDatasetTest[rowIndex][4] = relationship.index(personData[4])
+            nbDatasetTest[rowIndex][5] = race.index(personData[5])
+            nbDatasetTest[rowIndex][6] = sex.index(personData[6])
+            nbDatasetTest[rowIndex][7] = float(personData[7])//10
+            nbDatasetTest[rowIndex][8] = country.index(personData[8])
+            nbDatasetTest[rowIndex][9] = income.index(personData[9])
+        self.NBdataTest = nbDatasetTest
+
+        return
 
     def createDTreeDataset(self):
         """
