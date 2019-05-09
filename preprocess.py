@@ -33,11 +33,12 @@ class Data:
         self.SVMValid = None
 
         #Tree data
-        self.DTreeData = None
+        self.DTreeDataTrain = None
+        self.DTreeDataTest = None
 
         #Naive Bayes Data
-        self.NBdata = None
-
+        self.NBdataTrain = None
+        self.NBdataTest = None
     def readData(self):
         """
         Purpose - reads in the data and stores in a list of lists
@@ -211,7 +212,7 @@ class Data:
         country = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands', '?']
         income = ['>50K','<=50K', '?']
 
-        trainn = len( self.XTrain)
+        trainn = len(self.XTrain)
         trainp = len(self.XTrain[0])
 
         nbDatasetTrain = np.zeros([trainn,trainp])
@@ -231,7 +232,10 @@ class Data:
             nbDatasetTrain[rowIndex][9] = income.index(personData[9])
         self.NBdataTrain = nbDatasetTrain
 
-        testn = len(self.XTrain)
+        #Naive Bayes data preprocessing is similar to decision tree preprocessing 
+        self.DTreeDataTrain = nbDatasetTrain
+
+        testn = len(self.XTest)
         testp = len(self.XTest[0])
 
         nbDatasetTest = np.zeros([testn,testp])
@@ -251,12 +255,8 @@ class Data:
             nbDatasetTest[rowIndex][9] = income.index(personData[9])
         self.NBdataTest = nbDatasetTest
 
+        #Naive Bayes data preprocessing is similar to decision tree preprocessing 
+        self.DTreeDataTest = nbDatasetTest
+
         return
 
-    def createDTreeDataset(self):
-        """
-        Purpose - This function binarizes the dataset for SVM use
-        Params - none
-        Returns - nothing, but sets the self.SVMdata to the binarized features
-        """
-        pass
