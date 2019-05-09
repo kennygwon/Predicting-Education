@@ -27,11 +27,14 @@ def main():
     # evaluate accuracy and print confusoin matrix
     svmClassifier.evaluate(data.SVMTest, data.yTest, predictions)
     print("\n====================================================")
-    print("\t Starting hyperparameter tuning...")
+    print("\t Starting hyper-parameter tuning...")
     print("====================================================")
-    svc_params = {"C": np.logspace(0, 3, 4), "gamma": np.logspace(-4, 0, 5)}
+    svc_params = {"C": np.logspace(0, 3, 4)}
     svmClassifier.runTuneTest(svc_params, data.SVMTrain, data.yTrain)
     svmClassifier.printTestScores()
+    print("SVM Training Complete!")
+    print("====================================================")
     
 if __name__ == "__main__":
     main()
+awda
