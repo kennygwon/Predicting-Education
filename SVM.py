@@ -7,6 +7,7 @@ Date: 5/1/2019
 from sklearn.metrics import confusion_matrix, accuracy_score 
 from sklearn import svm  
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
+import numpy as np
 
 class SVM:
     
@@ -35,7 +36,8 @@ class SVM:
         stratifier = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
         for train_index, test_index in stratifier.split(X, y):
             X_train, X_test = X[train_index], X[test_index]
-            print("Train and test indices:", train_index, " and " ,test_index)
+            # change y into an np array
+            y =np.array(y)
             y_train, y_test = y[train_index], y[test_index]
             clf = GridSearchCV(self.clf, params)
             clf.fit(X_train, y_train)
@@ -59,6 +61,7 @@ class SVM:
         print("Fold    SVM Test Accuracy")
         for i in range(5):
             print("%4d %19.3f" % (i, self.svc_test_scores[i]))
+        print("\n")
 
     def trainSVM(self, XTrain, yTrain):
         """  
