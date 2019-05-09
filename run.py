@@ -26,6 +26,12 @@ def main():
     predictions = svmClassifier.testSVM(data.SVMTest)
     # evaluate accuracy and print confusoin matrix
     svmClassifier.evaluate(data.SVMTest, data.yTest, predictions)
+    print("\n====================================================")
+    print("\t Starting hyperparameter tuning...")
+    print("====================================================")
+    svc_params = {"C": np.logspace(0, 3, 4), "gamma": np.logspace(-4, 0, 5)}
+    svmClassifier.runTuneTest(svc_params, data.SVMTrain, data.yTrain)
+    svmClassifier.printTestScores()
     
 if __name__ == "__main__":
     main()

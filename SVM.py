@@ -15,6 +15,50 @@ class SVM:
         Initializes the SVM classifier
         """
         self.clf = svm.LinearSVC()
+        self.svc_test_scores = None
+
+    def runTuneTest(self, params, X, y):
+        """
+        Purpose - Tunes the SVC classifiers hyper-parameters. 
+                  This method handles creation of train/tune/test sets and runs
+                  the pipeline, then reports the scores of using various sets 
+                  of hyperparameters. We are using 5 folds here.
+        Params -  params: a dictionary of hyperparameters for GridSearchCV
+                  X: the training data
+                  y: the training labels
+        Returns - The scores using each distinct hyperparameter value.
+        """
+
+        print("\nTuning SVC...\n")
+        fold_num = 1
+        test_scores = []
+        stratifier = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+        for train_index, test_index in stratifier.split(X, y):
+            X_train, X_test = X[train_index], X[test_index]
+            print("Train and test indices:", train_index, " and " ,test_index)
+            y_train, y_test = y[train_index], y[test_index]
+            clf = GridSearchCV(self.clf, params)
+            clf.fit(X_train, y_train)
+            score = clf.score(X_train, y_train)
+            print("Fold number: ", fold_num)
+            print("Best Parameter: ", clf.best_params_)
+            print("Training score: ", score, "\n")
+            test_scores.append(clf.score(X_test, y_test))
+            fold_num += 1
+
+        self.svc_test_scores = test_scores
+    
+    def printTestScores(self):
+        """
+        Purpose - prints out the scores from the tune test
+        Params -  none
+        Returns - nothing, but has the side effect of printing the 
+                  tune test scores for the different folds
+        """
+        print("---------------------------------------------")
+        print("Fold    SVM Test Accuracy")
+        for i in range(5):
+            print("%4d %19.3f" % (i, self.svc_test_scores[i]))
 
     def trainSVM(self, XTrain, yTrain):
         """  
