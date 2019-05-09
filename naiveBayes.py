@@ -4,11 +4,15 @@ Authors: Kenny, Raymond, Rick
 Date: 5/1/2019
 """
 
+from sklearn.metrics import confusion_matrix, accuracy_score 
+from sklearn.naive_bayes import MultinomialNB
+from collections import Counter
+
 class NaiveBayes:
     
     def __init__(self):
         pass
-
+        
     def trainNB(self, trainX, trainy):
         """  
         Purpose - trains a Naive Bayes classifier

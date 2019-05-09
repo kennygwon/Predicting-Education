@@ -79,19 +79,19 @@ class Data:
                     data.append([6] + featureValues)
 
         self.rawData = data
-        dataSubset = self.getSubset(2000)
+        dataSubset = self.getSubset(30000)
         self.rawData = self.splitXY(dataSubset)[0]
 
         #creates the features and labels for the train data   
-        trainDataSubset = dataSubset[:1000]
+        trainDataSubset = dataSubset[:25000]
         self.XTrain, self.yTrain  = self.splitXY(trainDataSubset)
 
         #creates the features and labels for the Test data
-        testData = dataSubset[1000:1500]
+        testData = dataSubset[25000:28000]
         self.XTest, self.yTest = self.splitXY(testData)
         
         #creates the feature and labels for the validation set 
-        validData = dataSubset[1500:]
+        validData = dataSubset[28000:]
         self.XVal, self.yVal = self.splitXY(validData)
         
     def getSubset(self, numDataPoints):
@@ -190,11 +190,11 @@ class Data:
         # What are the labels? For SVM need binary classification task
         # Pre-processing complete, set SVMdata to new output
         
-        self.SVMTrain = newData[:1000]
-        self.SVMTest = newData[1000:1500]
-        self.SVMValid = newData[1500:]
+        self.SVMTrain = newData[:25000]
+        self.SVMTest = newData[25000:28000]
+        self.SVMValid = newData[28000:]
 
-    def createNBDatasets(self):
+    def createNBDataset(self):
         """
         Purpose - This function coverts continuous features to discrete ones 
                 for use with Naive Bayes.
@@ -211,14 +211,14 @@ class Data:
         country = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands', '?']
         income = ['>50K','<=50K', '?']
 
-        trainn = len(self.trainX)
-        trainp = len(self.trainX[0])
+        trainn = len( self.XTrain)
+        trainp = len(self.XTrain[0])
 
         nbDatasetTrain = np.zeros([trainn,trainp])
 
       
         for rowIndex in range(trainn):
-            personData = self.trainX[rowIndex]
+            personData = self.XTrain[rowIndex]
             nbDatasetTrain[rowIndex][0] = (float(personData[0])-15)//10
             nbDatasetTrain[rowIndex][1] = workclass.index(personData[1])
             nbDatasetTrain[rowIndex][2] = maritalStatus.index(personData[2])
@@ -231,14 +231,14 @@ class Data:
             nbDatasetTrain[rowIndex][9] = income.index(personData[9])
         self.NBdataTrain = nbDatasetTrain
 
-        testn = len(self.testX)
-        testp = len(self.testX[0])
+        testn = len(self.XTrain)
+        testp = len(self.XTest[0])
 
         nbDatasetTest = np.zeros([testn,testp])
 
       
         for rowIndex in range(testn):
-            personData = self.testX[rowIndex]
+            personData = self.XTest[rowIndex]
             nbDatasetTest[rowIndex][0] = (float(personData[0])-15)//10
             nbDatasetTest[rowIndex][1] = workclass.index(personData[1])
             nbDatasetTest[rowIndex][2] = maritalStatus.index(personData[2])
@@ -258,20 +258,5 @@ class Data:
         Purpose - This function binarizes the dataset for SVM use
         Params - none
         Returns - nothing, but sets the self.SVMdata to the binarized features
-        """
-        pass
-
-
-    def getSVMDataset(self):
-        """
-        """
-        pass
-
-    def createNBDataset(self):
-        """
-        """
-        pass
-    def createDTreeDataset(self):
-        """
         """
         pass
