@@ -4,41 +4,38 @@ Authors: Kenny, Raymond, Rick
 Date: 5/1/2019
 """
 
-from sklearn.metrics import confusion_matrix, accuracy_score 
+from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.naive_bayes import MultinomialNB
 from collections import Counter
 
 class NaiveBayes:
-    
+
     def __init__(self):
-        pass
-        
+        self.clf = MultinomialNB
+
     def trainNB(self, trainX, trainy):
-        """  
+        """
         Purpose - trains a Naive Bayes classifier
         Param - trainX - training data
                 trainy - training labels
-        Return - clf - the trained classifier
         """
 
         #initializes the Naive Bayes classifier
-        clf = MultinomialNB()
+        self.clf = MultinomialNB()
 
         #uses the training data to train the classifier
-        clf.fit(trainX, trainy)
-       
-        return clf
+        self.clf.fit(trainX, trainy)
+
 
     def testNB(self, testX):
         """
         Purpose - runs the NB model on the test data
-        Param - clf - trained clasifier
-                testX - test data
+        Param - testX - test data
         Return - yPred - list of predicted labels
         """
-        
+
         #creates list of predicted labels
-        yPred = clf.predict(testX)
+        yPred = self.clf.predict(testX)
 
         return yPred
 
@@ -51,7 +48,7 @@ class NaiveBayes:
 
         #calculates the accuracy using MFS
         counterTrain = Counter(trainy)
-        maxCount = max(counterTrain)
+        maxCount = max(counterTrain.values())
         for key in list(counterTrain.keys()):
           if counterTrain[key] == maxCount:
               MFS = key
@@ -66,5 +63,5 @@ class NaiveBayes:
         #prints the confusion matrix
         print("\nConfusion Matrix")
         print(confusion_matrix(yTrue,yPred))
-        
+
         return

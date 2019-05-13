@@ -5,8 +5,8 @@ Date: 4/25/2019
 """
 
 from preprocess import *
-from sklearn import svm  
-from sklearn.metrics import confusion_matrix, accuracy_score 
+from sklearn import svm
+from sklearn.metrics import confusion_matrix, accuracy_score
 from SVM import *
 from naiveBayes import *
 from decisionTrees import *
@@ -15,7 +15,7 @@ def main():
     data = Data("adult.data")
     data.readData()
     data.createSVMDataset()
-    
+
     print("\n====================================================")
     print("SVM Revving Up...")
     print("====================================================")
@@ -38,9 +38,31 @@ def main():
     print("====================================================")
     """
 
-    #DecisionTree 
+
     data.createNBDataset()
-    
+
+    #Naive Bayes
+    print("\n====================================================")
+    print("Starting Naive Bayes...")
+    print("====================================================")
+    print("Making naive assumptions...")
+    print("====================================================")
+    #splits the train and test data into example and labels
+    nbTrainX, nbTrainY = data.splitXY(data.NBdataTrain)
+    nbTestX, nbTestY = data.splitXY(data.NBdataTest)
+
+    #trains the naive bayes classifier
+    naiveBayesClassifier = NaiveBayes()
+    naiveBayesClassifier.trainNB(nbTrainX, nbTrainY)
+
+    #test our model on the test data and get predictions
+    nbPredictions = naiveBayesClassifier.testNB(nbTestX)
+    #evaluate the accuracy of nb model
+    naiveBayesClassifier.evaluate(nbTrainY, nbTestY, nbPredictions)
+
+
+
+    #DecisionTree
     print("\n====================================================")
     print("Planting Decision Tree Seeds...")
     print("====================================================")
