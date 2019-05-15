@@ -114,6 +114,9 @@ class Data:
                  numDataPoints - how many datapoints to return
         Return - subset - a subset of the data
         """
+        #performs the same random shuffle each time
+        random.seed(10)
+        
         #performs the shuffling in place
         random.shuffle(self.rawData)
 
