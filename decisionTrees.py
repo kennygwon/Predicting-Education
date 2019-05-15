@@ -7,8 +7,10 @@ date: 5/8/19
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import cross_val_score
-from sklearn import tree
-from graphviz import Source
+from sklearn.externals.six import StringIO
+from IPython.display import Image
+from sklearn.tree import export_graphviz
+import pydotplus
 
 class DecisionTree:
 
@@ -61,7 +63,16 @@ class DecisionTree:
     Params: None
     Return: String representation of the decision tree
     """
+    features = ['age', 'work-class', 'marital-status', 'ocupation', 'relationship',\
+                'race','sex','hours-per-week', 'country', 'income']
+    dot_data = StringIO()
 
-    graph = Source(tree.export_graphviz(self.dTree))
-    graph.format='png'
-    graph.render('dtree_render', view=True)
+    export_graphviz(self.dTree, out_file=dot_data,
+                    max_depth=10, feature_names= features,
+                    filled=True, rounded=True,
+                    rotate=True,
+                    special_characters=True)
+
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    Image(graph.create_png())
+    graph.write_png("tree.png")
