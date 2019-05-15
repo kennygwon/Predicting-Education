@@ -7,6 +7,7 @@ date: 5/8/19
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score 
 from sklearn.model_selection import cross_val_score
+from sklearn import tree
 
 class DecisionTree:
 
@@ -53,4 +54,12 @@ class DecisionTree:
     print(confusionMatrix)
     print()
 
+  def visualize(self):
+    """
+    Purpose: Prints out the decision tree so we can visualize it
+    Params: None
+    Return: String representation of the decision tree 
+    """
 
+    tree.export_graphviz(self.dTree)
+  
