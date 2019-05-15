@@ -10,6 +10,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from SVM import *
 from naiveBayes import *
 from decisionTrees import *
+import MFC as MFC
 
 def main():
     data = Data("adult.data")
@@ -48,8 +49,10 @@ def main():
     print("Making naive assumptions...")
     print("====================================================")
     #splits the train and test data into example and labels
-    nbTrainX, nbTrainY = data.splitXY(data.NBdataTrain)
-    nbTestX, nbTestY = data.splitXY(data.NBdataTest)
+    nbTrainX = data.NBdataTrain
+    nbTrainY = data.yTrain
+    nbTestX = data.NBdataTest
+    nbTestY = data.yTest
 
     #trains the naive bayes classifier
     naiveBayesClassifier = NaiveBayes()
@@ -58,7 +61,7 @@ def main():
     #test our model on the test data and get predictions
     nbPredictions = naiveBayesClassifier.testNB(nbTestX)
     #evaluate the accuracy of nb model
-    naiveBayesClassifier.evaluate(nbTrainY, nbTestY, nbPredictions)
+    naiveBayesClassifier.evaluate(nbTestY, nbPredictions)
 
 
 
@@ -72,8 +75,11 @@ def main():
     #creates decision tree
     decisionTreeClassifier = DecisionTree()
     #split the train and test data into example and labels
-    treeTrainX, treeTrainY = data.splitXY(data.DTreeDataTrain)
-    treeTestX, treeTestY = data.splitXY(data.DTreeDataTest)
+    treeTrainX = data.DTreeDataTrain
+    treeTrainY = data.yTrain
+    treeTestX = data.DTreeDataTest
+    treeTestY = data.yTest
+
     #train the decision tree model
     decisionTreeClassifier.trainTree(treeTrainX, treeTrainY)
 
@@ -83,6 +89,13 @@ def main():
     predictions = decisionTreeClassifier.testTree(treeTestX)
     #evaluate the accuracy
     decisionTreeClassifier.evaluate(treeTestX, treeTestY, predictions)
+
+
+    #MFC
+    print("\n====================================================")
+    print("Most Frequent Class Baseline")
+    print("====================================================")
+    MFC.evaluate(nbTrainY, nbTestY)
 
 
 if __name__ == "__main__":

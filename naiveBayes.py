@@ -39,22 +39,12 @@ class NaiveBayes:
 
         return yPred
 
-    def evaluate(self, trainy, yTrue, yPred):
+    def evaluate(self, yTrue, yPred):
         """
         Purpose - gives us our test accuracy and confusion matrix
         Param - yTrue - list of actual test labels
                 yPred - list of predicted test labels
         """
-
-        #calculates the accuracy using MFS
-        counterTrain = Counter(trainy)
-        maxCount = max(counterTrain.values())
-        for key in list(counterTrain.keys()):
-          if counterTrain[key] == maxCount:
-              MFS = key
-        counterTest = Counter(yTrue)
-        print("\nAccuracy using MFS")
-        print(counterTest[MFS] / len(yTrue))
 
         #calculates the accuracy using Naive Bayes
         print("\nAccuracy using Naive Bayes")

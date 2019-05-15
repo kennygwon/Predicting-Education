@@ -18,7 +18,7 @@ class Data:
         self.rawData = None
 
         #Train data
-        self.XTrain = None 
+        self.XTrain = None
         self.yTrain = None
         #Validation data
         self.XVal = None
@@ -39,10 +39,10 @@ class Data:
         #Naive Bayes Data
         self.NBdataTrain = None
         self.NBdataTest = None
-    def readData(self):
+    def readData(self, binary=False):
         """
         Purpose - reads in the data and stores in a list of lists
-        Returns - nothing, but sets the self.X and , 
+        Returns - nothing, but sets the self.X and ,
         """
 
         #initializes our list of lists containing our data
@@ -64,41 +64,52 @@ class Data:
                 education = featureValues.pop(3)
                 featureValues.pop(2) # remove fnlwgt
 
-                if (education in ["Preschool","1st-4th","5th-6th","7th-8th"]):
-                    data.append([0] + featureValues)
-                elif (education in ["9th", "10th", "11th", "12th"]):
-                    data.append([1] + featureValues)
-                elif(education == "HS-grad"):
-                    data.append([2] + featureValues)
-                elif(education == "Some-college"):
-                    data.append([3] + featureValues)
-                elif(education == "Bachelors"):
-                    data.append([4] + featureValues)
-                elif(education == "Masters"):
-                    data.append([5] + featureValues)
-                elif(education == "Doctorate"):
-                    data.append([6] + featureValues)
+                #only split education into two classes
+                if binary:
+                    if (education in ["Preschool","1st-4th","5th-6th","7th-8th"\
+                    ,"9th","10th","11th","12th","HS-grad"]):
+                        data.append([0] + featureValues)
+                    elif(education in ["Some-college","Bachelors","Masters",\
+                    "Doctorate"]):
+                        data.append([1] + featureValues)
+
+                #split education into seven classes by default
+                else:
+                    if (education in ["Preschool","1st-4th","5th-6th","7th-8th"]):
+                        data.append([0] + featureValues)
+                    elif (education in ["9th", "10th", "11th", "12th"]):
+                        data.append([1] + featureValues)
+                    elif(education == "HS-grad"):
+                        data.append([2] + featureValues)
+                    elif(education == "Some-college"):
+                        data.append([3] + featureValues)
+                    elif(education == "Bachelors"):
+                        data.append([4] + featureValues)
+                    elif(education == "Masters"):
+                        data.append([5] + featureValues)
+                    elif(education == "Doctorate"):
+                        data.append([6] + featureValues)
 
         self.rawData = data
         dataSubset = self.getSubset(30000)
         self.rawData = self.splitXY(dataSubset)[0]
 
-        #creates the features and labels for the train data   
+        #creates the features and labels for the train data
         trainDataSubset = dataSubset[:25000]
         self.XTrain, self.yTrain  = self.splitXY(trainDataSubset)
 
         #creates the features and labels for the Test data
         testData = dataSubset[25000:28000]
         self.XTest, self.yTest = self.splitXY(testData)
-        
-        #creates the feature and labels for the validation set 
+
+        #creates the feature and labels for the validation set
         validData = dataSubset[28000:]
         self.XVal, self.yVal = self.splitXY(validData)
-        
+
     def getSubset(self, numDataPoints):
         """
         Purpose - gets a random subset of specified size
-        Params - data - the original data in list of lists 
+        Params - data - the original data in list of lists
                  numDataPoints - how many datapoints to return
         Return - subset - a subset of the data
         """
@@ -111,7 +122,7 @@ class Data:
 
     def splitXY(self, subsetData):
         """
-        Purpose - We want to split the labels from the features 
+        Purpose - We want to split the labels from the features
         Params - subsetData - The unprocessed subset of data that we are working with
         Return - List X and List y of features and class labels respectively
         """
@@ -121,9 +132,9 @@ class Data:
 
         #iterates through all data and splits into X and y
         for line in subsetData:
-            y.append(line[0])    
+            y.append(line[0])
             X.append(line[1:])
-        
+
         return X,y
 
     def createSVMDataset(self):
@@ -133,7 +144,7 @@ class Data:
         Returns - nothing, but sets the self.SVMdata to the binarized features
         """
         n = len(self.rawData)
-     
+
         newFeatures = []
         #add each feature by category
         newFeatures.append('age')
@@ -156,9 +167,9 @@ class Data:
         # figure out indices for continuous features in the new array
         contFeatureIndexer = {
                                 0 : newFeatureDict['age'],
-                                1 : newFeatureDict['hours-per-week'] 
+                                1 : newFeatureDict['hours-per-week']
         }
-        newData = np.zeros([n, p])        
+        newData = np.zeros([n, p])
 
         lineCounter = 0
         for example in self.rawData:
@@ -171,9 +182,9 @@ class Data:
             #print("New example-------------------------------------")
             for feature in example:
                 if feature.isdigit():
-                    # There are two continuous features after popping unnecessary features 
+                    # There are two continuous features after popping unnecessary features
                     # We use the counter to index into our continuous feature indexing dictionary
-                    # to determine which column index these lie in the larger feature index 
+                    # to determine which column index these lie in the larger feature index
                     # dictionary
                     featureIndex = contFeatureIndexer[contFeatCounter]
                     #print("Feature index in newArray is ", featureIndex)
@@ -182,27 +193,27 @@ class Data:
                 elif feature == '?':
                     pass
                 else:
-                    # Feature not continuous - let's 
+                    # Feature not continuous - let's
                     newData[lineCounter, newFeatureDict[feature]] = 1
             lineCounter += 1
             contFeatCounter = 0
-        
+
         # Now do labels
         # What are the labels? For SVM need binary classification task
         # Pre-processing complete, set SVMdata to new output
-        
+
         self.SVMTrain = newData[:25000]
         self.SVMTest = newData[25000:28000]
         self.SVMValid = newData[28000:]
 
     def createNBDataset(self):
         """
-        Purpose - This function coverts continuous features to discrete ones 
+        Purpose - This function coverts continuous features to discrete ones
                 for use with Naive Bayes.
         Params - none
-        Returns - nothing, but sets the self.SVMdata to the binarized features
+        Returns - nothing
         """
-      
+
         workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked', '?']
         maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse', '?']
         occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces', '?']
@@ -217,7 +228,7 @@ class Data:
 
         nbDatasetTrain = np.zeros([trainn,trainp])
 
-      
+
         for rowIndex in range(trainn):
             personData = self.XTrain[rowIndex]
             nbDatasetTrain[rowIndex][0] = (float(personData[0])-15)//10
@@ -232,7 +243,7 @@ class Data:
             nbDatasetTrain[rowIndex][9] = income.index(personData[9])
         self.NBdataTrain = nbDatasetTrain
 
-        #Naive Bayes data preprocessing is similar to decision tree preprocessing 
+        #Naive Bayes data preprocessing is similar to decision tree preprocessing
         self.DTreeDataTrain = nbDatasetTrain
 
         testn = len(self.XTest)
@@ -240,7 +251,7 @@ class Data:
 
         nbDatasetTest = np.zeros([testn,testp])
 
-      
+
         for rowIndex in range(testn):
             personData = self.XTest[rowIndex]
             nbDatasetTest[rowIndex][0] = (float(personData[0])-15)//10
@@ -255,8 +266,7 @@ class Data:
             nbDatasetTest[rowIndex][9] = income.index(personData[9])
         self.NBdataTest = nbDatasetTest
 
-        #Naive Bayes data preprocessing is similar to decision tree preprocessing 
+        #Naive Bayes data preprocessing is similar to decision tree preprocessing
         self.DTreeDataTest = nbDatasetTest
 
         return
-
