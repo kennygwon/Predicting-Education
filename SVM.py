@@ -7,6 +7,7 @@ Date: 5/1/2019
 from sklearn.metrics import confusion_matrix, accuracy_score 
 from sklearn import svm  
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
+import matplotlib.pyplot as plt
 import numpy as np
 
 class SVM:
@@ -15,7 +16,7 @@ class SVM:
         """
         Initializes the SVM classifier
         """
-        self.clf = svm.LinearSVC()
+        self.clf = svm.LinearSVC(C=0.1, random_state=42)
         self.svc_test_scores = None
 
     def runTuneTest(self, params, X, y):
@@ -103,5 +104,52 @@ class SVM:
         # now call confusion matrix method
         print("\nConfusion Matrix")
         print(confusion_matrix(yTrue, yPred))
-        
+
         return
+
+    def visualizeWeights(self, features):
+        """
+        Purpose - draws bar graphs that help analyse feature importance using 
+                  corresponding feature weights from our trained classifier.
+                  We have 32 features in total, but we will analyse the top 10
+                  most important features 
+        Params -  features: a list of length p containing the feature names for 
+                  our SVM classifier  
+        Returns - Nothing, prints two graph using their absolute weight values
+        """
+        weight_mtx = self.clf.coef_.tolist() 
+        y_pos = np.arange(10) 
+
+        # NB: We have seven models, as Linear SVC applies a One Vs All criterion for
+        # multiclass classification. We shall compute the top 5 features for each 
+        # model
+        
+        k = 1
+        for weight_vect in weight_mtx:
+            # create a dictionaries to keep track of indices while sorting
+            weight_dict = {}
+
+            for i in range(len(weight_vect)):
+                weight_dict[features[i]] = weight_vect[i]
+
+            sorted_weights = sorted(weight_dict.items(), key=lambda kv: kv[1], reverse=True)
+
+            print("Model #: ", k)
+            print("Top 5 features are : ")
+            for j in range(5):
+                print(sorted_weights[j])
+            print("\n--------------------------------------------------------")
+            k += 1 
+
+            top_features = [pair[0] for pair in sorted_weights]
+            top_weights = [pair[1] for pair in sorted_weights]
+
+            top_10_features = top_features[:10]
+            top_10_weights = top_weights[:10]
+
+            plt.bar(y_pos, top_10_weights,  align='center', width=0.5)
+            plt.xticks(y_pos, top_10_features)
+            plt.ylabel("Weight Value")
+            plt.title("SVM coefficient analysis using regular weights")
+            plt.show()
+            

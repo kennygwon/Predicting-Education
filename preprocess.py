@@ -31,6 +31,7 @@ class Data:
         self.SVMTrain = None
         self.SVMTest = None
         self.SVMValid = None
+        self.SVMFeatures = None
 
         #Tree data
         self.DTreeDataTrain = None
@@ -158,6 +159,7 @@ class Data:
         newFeatures.extend(['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands'])
         newFeatures.extend(['>50K','<=50K'])
         p = len(newFeatures)
+        self.SVMFeatures = newFeatures
 
         # assign each new feature an index in the new array
         newFeatureDict = {}
