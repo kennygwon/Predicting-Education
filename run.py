@@ -89,7 +89,7 @@ def main():
     predictions = decisionTreeClassifier.testTree(treeTestX)
     #evaluate the accuracy
     decisionTreeClassifier.evaluate(treeTestX, treeTestY, predictions)
-
+    decisionTreeClassifier.visualize()
 
     #MFC
     print("\n====================================================")

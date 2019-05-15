@@ -1,13 +1,14 @@
 """
-Uses decision trees to train a model 
+Uses decision trees to train a model
 Authors: Kenny Gwon, Raymond Liu, Richard Muniu
 date: 5/8/19
 """
 
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import confusion_matrix, accuracy_score 
+from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import cross_val_score
 from sklearn import tree
+from graphviz import Source
 
 class DecisionTree:
 
@@ -18,7 +19,7 @@ class DecisionTree:
   def trainTree(self, trainX, trainy):
     """
     Purpose: Trains a decision tree using our training data
-    Params: trainX - Training examples 
+    Params: trainX - Training examples
                 trainy - Training labels
     Return: returns a decision tree classifier
     """
@@ -28,9 +29,9 @@ class DecisionTree:
 
   def testTree(self, testX):
     """
-    Purpose: Uses test data on the decision tree model we created 
+    Purpose: Uses test data on the decision tree model we created
     Params: testX: Test data / test examples
-    Return: a list of predicted y values 
+    Return: a list of predicted y values
     """
 
     #The predict method will return a list of predicted y values from the test examples
@@ -41,14 +42,14 @@ class DecisionTree:
   def evaluate(self, testX, testy, yPred):
     """
     Purpose: Evaluates our tree model
-    Params: testy: The true labels / target labels 
+    Params: testy: The true labels / target labels
     """
 
     #The score method will return the mean accuracy on the given test data
     #and labels
     treeScores = self.dTree.score(testX, testy)
     print("The Decision Tree's Score is...", treeScores)
-    
+
     print("Confusion Matrix")
     confusionMatrix = confusion_matrix(testy, yPred)
     print(confusionMatrix)
@@ -58,8 +59,9 @@ class DecisionTree:
     """
     Purpose: Prints out the decision tree so we can visualize it
     Params: None
-    Return: String representation of the decision tree 
+    Return: String representation of the decision tree
     """
 
-    tree.export_graphviz(self.dTree)
-  
+    graph = Source(tree.export_graphviz(self.dTree))
+    graph.format='png'
+    graph.render('dtree_render', view=True)
