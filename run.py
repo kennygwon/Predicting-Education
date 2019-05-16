@@ -65,7 +65,7 @@ def main():
     predictions = svmClassifier.testSVM(data.SVMTest)
     # evaluate accuracy and print confusoin matrix
     svm_score = svmClassifier.evaluate(data.SVMTest, data.yTest, predictions)
-    svmClassifier.visualizeWeights(data.SVMFeatures)
+    #svmClassifier.visualizeWeights(data.SVMFeatures)
     # uncomment this code to perform hyperparameter tuning for the SVC 
     # classifier
     """
@@ -128,7 +128,7 @@ def main():
     predictions = decisionTreeClassifier.testTree(treeTestX)
     #evaluate the accuracy
     dtree_score = decisionTreeClassifier.evaluate(treeTestX, treeTestY, predictions)
-    decisionTreeClassifier.visualize(dTreeFeats)
+    #decisionTreeClassifier.visualize(dTreeFeats)
 
     #MFC
     print("\n====================================================")
