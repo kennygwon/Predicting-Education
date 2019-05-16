@@ -66,4 +66,14 @@ Sklearn svm.LinearSVC, retrieved from https://scikit-learn.org/stable/modules/ge
 
 Sklearn tree.DecisionTreeClassifier, retrieved from https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html on May 5, 2019
 
+---
+
+> Note: The necessary packages are necessary to run our program:
+> 1) Pydotpus - Used to visualize our tree 
+>    To install you must run the following command in terminal
+> `pip3 install Pydotplus`
+> 2) Graphviz - Used in conjunction with Pydotplus to visualize the tree
+>    To install you must run the following command in terminal 
+> `pip3 install graphviz`
+
 
