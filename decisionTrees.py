@@ -16,7 +16,7 @@ class DecisionTree:
 
   def __init__(self):
     #Makes the decision tree classifier a member variable
-    self.dTree = DecisionTreeClassifier()
+    self.dTree = DecisionTreeClassifier(random_state=42)
 
   def trainTree(self, trainX, trainy):
     """
