@@ -66,7 +66,7 @@ Sklearn svm.LinearSVC, retrieved from https://scikit-learn.org/stable/modules/ge
 
 Sklearn tree.DecisionTreeClassifier, retrieved from https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html on May 5, 2019
 
-Lots of additional help from views and opinions on stackexchange.com!
+Lots of additional help from views and opinions from https://stackexchange.com!
 
 ---
 
