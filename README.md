@@ -1,14 +1,14 @@
 ## CS 66 Final Project Lab Notebook
 
-Name 1: Kenneth Gwon (Kenny) 
-Name 2: Raymond Liu 
-Name 3: Richard Muniu (Rick)
+Name 1: Kenneth Gwon (Kenny)  
+Name 2: Raymond Liu   
+Name 3: Richard Muniu (Rick)  
 
-Username 1: kgwon1
-Username 2: rliu5
-Username 3: rmuniu1
+Username 1: kgwon1  
+Username 2: rliu5  
+Username 3: rmuniu1  
 
-Project Title: Census Data To Predict Levels Of Education
+Project Title: Census Data To Predict Levels Of Education  
 
 ---
 
