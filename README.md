@@ -8,7 +8,7 @@ Username 1: kgwon1
 Username 2: rliu5  
 Username 3: rmuniu1  
 
-Project Title: Census Data To Predict Levels Of Education  
+Project Title: *Census Data To Predict Levels Of Education*  
 
 ---
 
@@ -43,7 +43,7 @@ Project Title: Census Data To Predict Levels Of Education
 * Noticed ordinal feature weight problem with Naive Bayes dataset - changed format to one hot encoding, support a class for unknown types (‘?’)
 * Presentation slides initialization
 
-#### Richard/Raymond/Kenny: 5-13-19 (.5hrs)
+#### Richard/Raymond/Kenny: 5-13-19 (1.5hrs)
 * Final presentation prep huddle and to-do list creation.
 * Decision Tree feature analysis 
 * SVM feature analysis attempt (multiclass classification task)
@@ -76,4 +76,10 @@ Sklearn tree.DecisionTreeClassifier, retrieved from https://scikit-learn.org/sta
 >    To install you must run the following command in terminal  
 > `pip3 install graphviz`  
 
+---
+
+### How to run
+With dependencies installed (see section above), execute the following commands to perform binary and multiclass classification respectively:
+`python3 main.py -t binary`
+`python3 main.py -t multiclass`
 
