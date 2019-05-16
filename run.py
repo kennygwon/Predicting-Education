@@ -65,7 +65,11 @@ def main():
     predictions = svmClassifier.testSVM(data.SVMTest)
     # evaluate accuracy and print confusoin matrix
     svm_score = svmClassifier.evaluate(data.SVMTest, data.yTest, predictions)
-    svmClassifier.visualizeWeights(data.SVMFeatures)
+    
+    # feature analysis for binary classification task
+    if binary:
+        svmClassifier.visualizeWeights(data.SVMFeatures, data.SVMFeatureMeans)
+
     # uncomment this code to perform hyperparameter tuning for the SVC 
     # classifier
     """

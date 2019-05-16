@@ -96,7 +96,6 @@ class SVM:
                   yPred - list of predicted test labels
         Returns - svmScore: score of the SVM classifier
         """
-
         # calculates the accuracy score on  the test data
         svmScore = self.clf.score(XTest, yTrue)
         print("SVM classifer score was ", svmScore)
@@ -107,7 +106,7 @@ class SVM:
 
         return svmScore
 
-    def visualizeWeights(self, features):
+    def visualizeWeights(self, features, feat_means):
         """
         Purpose - draws bar graphs that help analyse feature importance using 
                   corresponding feature weights from our trained classifier.
@@ -115,44 +114,42 @@ class SVM:
                   most important features 
         Params -  features: a list of length p containing the feature names for 
                   our SVM classifier  
-        Returns - Nothing, prints two graph using their absolute weight values
+        Returns - Nothing, prints top features for each model and displays a
+                  graphical representation for each
         """
-        weight_mtx = self.clf.coef_.tolist() 
+        weights = self.clf.coef_ 
         y_pos = np.arange(5) 
-
-        # NB: We have seven models, as Linear SVC applies a One Vs Rest criterion for
-        # multiclass classification. We shall compute the top 5 features for each 
-        # model
         
-        k = 1
-        for weight_vect in weight_mtx:
-            # create a dictionaries to keep track of indices while sorting
-            weight_dict = {}
+        
+        # calculate (w*x) to see relative impact of weight on class means 
+        wT_x = np.multiply(weights, feat_means)
+        wT_x = np.reshape(wT_x, (87,))
 
-            for i in range(len(weight_vect)):
-                weight_dict[features[i]] = weight_vect[i]
+        feat_impact_dict = {}
+        original_vals = {}
+        for i in range(len(features)):
+            # use absolute values for sorting
+            feat_impact_dict[features[i]] = abs(wT_x[i]) 
+            # save original values for later analysis
+            original_vals[features[i]] = wT_x[i]
 
-            sorted_weights = sorted(weight_dict.items(), key=lambda kv: kv[1], reverse=True)
+        sorted_feat_impacts = sorted(feat_impact_dict.items(), key=lambda kv: kv[1], reverse=True)
 
-            print("Model #: ", k)
-            print("Top 5 features are : ")
-            for j in range(5):
-                print(sorted_weights[j])
-            print("\n--------------------------------------------------------")
+        top_features = [pair[0] for pair in sorted_feat_impacts]
+        top_5_features = top_features[:5]
+        top_5_wTx = []
 
-            # next, lets plot some graphs
-            top_features = [pair[0] for pair in sorted_weights]
-            top_weights = [pair[1] for pair in sorted_weights]
+        print("\nHere are the top 5 most impactful features (SVM, bin. classification):\n")
+        for feature in top_5_features:
+            original_impact_val = original_vals[feature]
+            top_5_wTx.append(original_impact_val)
+            print("%s : %f" % (feature, original_impact_val))
+        print("---------------------------------------------------\n")    
 
-            top_5_features = top_features[:5]
-            top_5_weights = top_weights[:5]
-
-            plt.bar(y_pos, top_5_weights,  align='center', width=0.5)
-            plt.xticks(y_pos, top_5_features)
-            plt.ylabel("Weight Value")
-            title = "SVM coefficient analysis: Model # " + str(k)
-            plt.title(title)
-            plt.show()
-
-            k += 1 
-            
+        # graphically,
+        plt.bar(y_pos, top_5_wTx,  align='center', width=0.5)
+        plt.xticks(y_pos, top_5_features)
+        plt.ylabel("wT * x")
+        title = "SVM Feature Analysis: Binary Classification" 
+        plt.title(title)
+        plt.show()

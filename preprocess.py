@@ -32,6 +32,7 @@ class Data:
         self.SVMTest = None
         self.SVMValid = None
         self.SVMFeatures = None
+        self.SVMFeatureMeans = None
 
         #Tree data
         self.DTreeDataTrain = None
@@ -204,10 +205,12 @@ class Data:
             contFeatCounter = 0
 
         # Now do labels
-        # What are the labels? For SVM need binary classification task
         # Pre-processing complete, set SVMdata to new output
 
         self.SVMTrain = newData[:25000]
+        # calculate feature means for feature analysis later on
+        self.SVMFeatureMeans = np.mean(self.SVMTrain, axis=0)
+
         self.SVMTest = newData[25000:28000]
         self.SVMValid = newData[28000:]
 
