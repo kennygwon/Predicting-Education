@@ -179,16 +179,10 @@ class Data:
 
         lineCounter = 0
         for example in self.rawData:
-
-            #print("Original example: \n", example)
-
-            #print("Example post-pop: \n", example)
-
             contFeatCounter = 0
-            #print("New example-------------------------------------")
             for feature in example:
                 if feature.isdigit():
-                    # There are two continuous features after popping unnecessary features
+                    # There are two continuous features after popping unnecessary features (age, hrs/wk)
                     # We use the counter to index into our continuous feature indexing dictionary
                     # to determine which column index these lie in the larger feature index
                     # dictionary
@@ -345,13 +339,8 @@ class Data:
             nextIndex += len(country)
             dTreeDatasetTest[rowIndex][nextIndex + income.index(personData[9])] = 1
 
-
-
-
         self.NBdataTrain = nbDatasetTrain
         self.DTreeDataTrain = dTreeDatasetTrain
         self.DTreeDataTest = dTreeDatasetTest
-
-
  
         return dTreeFts

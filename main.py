@@ -44,7 +44,7 @@ def main():
 
     parser = optparse.OptionParser(description='main.py')
     parser.add_option('-t', '--task', \
-        help='whether to perform a binary/multiclass classification task or not') 
+        help="use 'binary' for binary classification, 'multiclass' for multiclass") 
 
     opts = parser.parse_args()[0]
 
@@ -70,9 +70,9 @@ def main():
     
     # feature analysis for binary classification task
     if binary:
+        print("\nSee feature importance graph...")
         svmClassifier.visualizeWeights(data.SVMFeatures, data.SVMFeatureMeans)
 
-    #svmClassifier.visualizeWeights(data.SVMFeatures)
     # uncomment this code to perform hyperparameter tuning for the SVC 
     # classifier
     """
@@ -93,7 +93,7 @@ def main():
     print("Starting Naive Bayes...")
     print("====================================================")
     print("Making naive assumptions...")
-    print("====================================================")
+    print("----------------------------------------------------")
     #splits the train and test data into example and labels
     nbTrainX = data.NBdataTrain
     nbTrainY = data.yTrain
@@ -114,7 +114,7 @@ def main():
     print("Planting Decision Tree Seeds...")
     print("====================================================")
     print("Watering soil...")
-    print("====================================================")
+    print("----------------------------------------------------")
 
     #creates decision tree
     decisionTreeClassifier = DecisionTree()
@@ -143,6 +143,7 @@ def main():
     print("====================================================")
     mfc_score = MFC.evaluate(nbTrainY, nbTestY)
 
+    print("\nSee overall score graph...\n")
     # plot comparative bar graph
     scores = [svm_score, nb_score, dtree_score, mfc_score]
     x_labels = ['SVM', 'Naive Bayes', 'DTree', 'MFC']
@@ -152,6 +153,10 @@ def main():
     plt.ylabel("Accuracy")
     plt.title("Accuracy Scores for Different Classifiers")
     plt.show()
+
+    print("====================================================")
+    print("PROGRAM COMPLETE!")
+    print("====================================================")
 
 if __name__ == "__main__":
     main()

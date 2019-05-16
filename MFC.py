@@ -1,5 +1,5 @@
 """
-Uses Most Frequent Class to obtain accuracy
+Uses Most Frequent Class Label to obtain accuracy baseline
 Authors: Kenny, Raymond, Rick
 Date: 5/1/2019
 """

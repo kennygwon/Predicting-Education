@@ -44,20 +44,20 @@ class DecisionTree:
   def evaluate(self, testX, testy, yPred):
     """
     Purpose: Evaluates our tree model
-    Params: testy: The true labels / target labels
+    Params: testy - The true labels / target labels
+    Returns: treeScores - score of this classifier on the test data
     """
 
     #The score method will return the mean accuracy on the given test data
     #and labels
-    treeScores = self.dTree.score(testX, testy)
-    print("The Decision Tree's Score is...", treeScores)
-
+    treeScore = self.dTree.score(testX, testy)
+    print("The Decision Tree's Score is...", treeScore)
     print("Confusion Matrix")
     confusionMatrix = confusion_matrix(testy, yPred)
     print(confusionMatrix)
     print()
 
-    return treeScores
+    return treeScore
 
   def visualize(self, dTreeFeats):
     """
@@ -75,4 +75,4 @@ class DecisionTree:
 
     graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
     Image(graph.create_png())
-    graph.write_png("tree.png")
+    graph.write_png("figs/tree.png")
