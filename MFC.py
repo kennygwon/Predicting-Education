@@ -22,7 +22,8 @@ def evaluate(trainy, yTrue):
           MFS = key
     counterTest = Counter(yTrue)
     print("\nAccuracy using MFS")
-    print(counterTest[MFS] / len(yTrue))
+    accuracy = counterTest[MFS] / len(yTrue)
+    print(accuracy)
 
     #creates the list of predicted values
     yPred = [MFS] * len(yTrue)
@@ -31,4 +32,4 @@ def evaluate(trainy, yTrue):
     print("\nConfusion Matrix")
     print(confusion_matrix(yTrue,yPred))
 
-    return
+    return accuracy

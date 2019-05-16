@@ -42,16 +42,17 @@ class NaiveBayes:
     def evaluate(self, yTrue, yPred):
         """
         Purpose - gives us our test accuracy and confusion matrix
-        Param - yTrue - list of actual test labels
-                yPred - list of predicted test labels
+        Param   - yTrue - list of actual test labels
+                  yPred - list of predicted test labels
+        Returns - score of the Naive Bayes classifier
         """
-
         #calculates the accuracy using Naive Bayes
         print("\nAccuracy using Naive Bayes")
-        print(accuracy_score(yTrue, yPred))
+        accuracy = accuracy_score(yTrue, yPred)
+        print(accuracy)
 
         #prints the confusion matrix
         print("\nConfusion Matrix")
         print(confusion_matrix(yTrue,yPred))
 
-        return
+        return accuracy

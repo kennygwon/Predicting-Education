@@ -57,6 +57,8 @@ class DecisionTree:
     print(confusionMatrix)
     print()
 
+    return treeScores
+
   def visualize(self):
     """
     Purpose: Prints out the decision tree so we can visualize it

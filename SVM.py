@@ -92,20 +92,20 @@ class SVM:
     def evaluate(self, XTest, yTrue, yPred):
         """
         Purpose - gives us our test accuracy and confusion matrix
-        Param - yTrue - list of actual test labels
-                yPred - list of predicted test labels
+        Param   - yTrue - list of actual test labels
+                  yPred - list of predicted test labels
+        Returns - svmScore: score of the SVM classifier
         """
 
-        # calculates the accuracy score on the test data
+        # calculates the accuracy score on  the test data
         svmScore = self.clf.score(XTest, yTrue)
         print("SVM classifer score was ", svmScore)
-
         # prints the confusion matrix
         # now call confusion matrix method
         print("\nConfusion Matrix")
         print(confusion_matrix(yTrue, yPred))
 
-        return
+        return svmScore
 
     def visualizeWeights(self, features):
         """
@@ -118,9 +118,9 @@ class SVM:
         Returns - Nothing, prints two graph using their absolute weight values
         """
         weight_mtx = self.clf.coef_.tolist() 
-        y_pos = np.arange(10) 
+        y_pos = np.arange(5) 
 
-        # NB: We have seven models, as Linear SVC applies a One Vs All criterion for
+        # NB: We have seven models, as Linear SVC applies a One Vs Rest criterion for
         # multiclass classification. We shall compute the top 5 features for each 
         # model
         
@@ -139,17 +139,20 @@ class SVM:
             for j in range(5):
                 print(sorted_weights[j])
             print("\n--------------------------------------------------------")
-            k += 1 
 
+            # next, lets plot some graphs
             top_features = [pair[0] for pair in sorted_weights]
             top_weights = [pair[1] for pair in sorted_weights]
 
-            top_10_features = top_features[:10]
-            top_10_weights = top_weights[:10]
+            top_5_features = top_features[:5]
+            top_5_weights = top_weights[:5]
 
-            plt.bar(y_pos, top_10_weights,  align='center', width=0.5)
-            plt.xticks(y_pos, top_10_features)
+            plt.bar(y_pos, top_5_weights,  align='center', width=0.5)
+            plt.xticks(y_pos, top_5_features)
             plt.ylabel("Weight Value")
-            plt.title("SVM coefficient analysis using regular weights")
+            title = "SVM coefficient analysis: Model # " + str(k)
+            plt.title(title)
             plt.show()
+
+            k += 1 
             
