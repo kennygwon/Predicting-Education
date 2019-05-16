@@ -11,7 +11,8 @@ from SVM import *
 from naiveBayes import *
 from decisionTrees import *
 import MFC as MFC
-import optparse
+import optparse, sys
+import matplotlib.pyplot as plt
 
 def parse_opts(opts, parser):
     """
@@ -22,26 +23,39 @@ def parse_opts(opts, parser):
     Returns - boolean, true if user wants a binary classification task, false 
               otherwise 
     """
-    mandatory = 'binary'
+    mandatory = 'task'
     if not opts.__dict__[mandatory]:
-        print('mandatory option ' + mandatory + ' is missing\n')
+        print('mandatory option ' + mandatory + ' is missing!\n')
+        parser.print_help()
+        sys.exit(1) 
+    
+    # now figure out which task to do
+    task = opts.task
+    if task == 'binary':
+        return True
+    elif task == 'multiclass':
+        return False
+    else:
+        print("ERROR: Unrecognized task! Use options 'binary' or 'multiclass'\n")
         parser.print_help()
         sys.exit(1)
 
 def main():
-    data = Data("adult.data")
+
     parser = optparse.OptionParser(description='main.py')
-    parser.add_option('-b', '--binary', type='string', help='whether to run binary classification task')
+    parser.add_option('-t', '--task', \
+        help='whether to perform a binary/multiclass classification task or not') 
+
     opts = parser.parse_args()[0]
 
-    data.readData()
-    
-    # Uncomment line below to binary classification task, otherwise performs 
-    # multiclass classification using 7 classes
-    # data.readData(binary=True)
-    
-    data.createSVMDataset()
+    binary = parse_opts(opts, parser)
+    data = Data("data/adult.data")
+    if binary:
+        data.readData(binary=True)
+    else:
+        data.readData()
 
+    data.createSVMDataset()
     print("\n====================================================")
     print("SVM Revving Up...")
     print("====================================================")
@@ -52,10 +66,15 @@ def main():
     #evaluate test data
     predictions = svmClassifier.testSVM(data.SVMTest)
     # evaluate accuracy and print confusoin matrix
-    svmClassifier.evaluate(data.SVMTest, data.yTest, predictions)
-    print("data dimension: ", data.SVMTrain.shape)
-    svmClassifier.visualizeWeights(data.SVMFeatures)
+    svm_score = svmClassifier.evaluate(data.SVMTest, data.yTest, predictions)
+    
+    # feature analysis for binary classification task
+    if binary:
+        svmClassifier.visualizeWeights(data.SVMFeatures, data.SVMFeatureMeans)
 
+    #svmClassifier.visualizeWeights(data.SVMFeatures)
+    # uncomment this code to perform hyperparameter tuning for the SVC 
+    # classifier
     """
     print("\n====================================================")
     print("\t Starting hyper-parameter tuning...")
@@ -67,7 +86,7 @@ def main():
     print("====================================================")
     """
 
-    data.createNBDataset()
+    dTreeFeats = data.createNBDataset()
 
     #Naive Bayes
     print("\n====================================================")
@@ -88,9 +107,7 @@ def main():
     #test our model on the test data and get predictions
     nbPredictions = naiveBayesClassifier.testNB(nbTestX)
     #evaluate the accuracy of nb model
-    naiveBayesClassifier.evaluate(nbTestY, nbPredictions)
-
-
+    nb_score = naiveBayesClassifier.evaluate(nbTestY, nbPredictions)
 
     #DecisionTree
     print("\n====================================================")
@@ -106,6 +123,8 @@ def main():
     treeTrainY = data.yTrain
     treeTestX = data.DTreeDataTest
     treeTestY = data.yTest
+  
+    print(len(treeTrainX))
 
     #train the decision tree model
     decisionTreeClassifier.trainTree(treeTrainX, treeTrainY)
@@ -115,15 +134,24 @@ def main():
     #Test our model on the test data and get predictions
     predictions = decisionTreeClassifier.testTree(treeTestX)
     #evaluate the accuracy
-    decisionTreeClassifier.evaluate(treeTestX, treeTestY, predictions)
-
+    dtree_score = decisionTreeClassifier.evaluate(treeTestX, treeTestY, predictions)
+    #decisionTreeClassifier.visualize(dTreeFeats)
 
     #MFC
     print("\n====================================================")
     print("Most Frequent Class Baseline")
     print("====================================================")
-    MFC.evaluate(nbTrainY, nbTestY)
+    mfc_score = MFC.evaluate(nbTrainY, nbTestY)
 
+    # plot comparative bar graph
+    scores = [svm_score, nb_score, dtree_score, mfc_score]
+    x_labels = ['SVM', 'Naive Bayes', 'DTree', 'MFC']
+    y_pos = np.arange(4)
+    plt.bar(y_pos, scores,  align='center', width=0.5)
+    plt.xticks(y_pos, x_labels)
+    plt.ylabel("Accuracy")
+    plt.title("Accuracy Scores for Different Classifiers")
+    plt.show()
 
 if __name__ == "__main__":
     main()
