@@ -248,9 +248,6 @@ class Data:
             nbDatasetTrain[rowIndex][9] = income.index(personData[9])
         self.NBdataTrain = nbDatasetTrain
 
-        #Naive Bayes data preprocessing is similar to decision tree preprocessing
-        self.DTreeDataTrain = nbDatasetTrain
-
         testn = len(self.XTest)
         testp = len(self.XTest[0])
 
@@ -271,7 +268,87 @@ class Data:
             nbDatasetTest[rowIndex][9] = income.index(personData[9])
         self.NBdataTest = nbDatasetTest
 
-        #Naive Bayes data preprocessing is similar to decision tree preprocessing
-        self.DTreeDataTest = nbDatasetTest
+        #initializes np array for decision tree data
+        dTreeDatasetTrain = np.zeros([trainn, trainp-8+len(workclass)+len(maritalStatus)\
+            +len(occupation)+len(relationship)+len(race)+len(sex)+len(country)+len(income)])
+       
+        dTreeDatasetTest = np.zeros([testn, trainp-8+len(workclass)+len(maritalStatus)\
+            +len(occupation)+len(relationship)+len(race)+len(sex)+len(country)+len(income)])
 
-        return
+        #creates a list of features for DTree
+        dTreeFts = []
+        dTreeFts.append("age")
+        for i in workclass:
+            dTreeFts.append("workclass")
+        for i in maritalStatus:
+            dTreeFts.append("marital status")
+        for i in occupation:
+            dTreeFts.append("occupation")
+        for i in relationship:
+            dTreeFts.append("relationship")
+        for i in race:
+            dTreeFts.append("race")
+        for i in sex:
+            dTreeFts.append("sex")
+        dTreeFts.append("hours worked")
+        for i in country:
+            dTreeFts.append("country")
+        for i in income:
+            dTreeFts.append("income")
+
+        for rowIndex in range(trainn):
+            personData = self.XTrain[rowIndex]
+            nextIndex = 0
+            dTreeDatasetTrain[rowIndex][0] = (float(personData[0])-15)//10
+            nextIndex += 1
+            dTreeDatasetTrain[rowIndex][nextIndex + workclass.index(personData[1])] = 1
+            nextIndex += len(workclass)
+            dTreeDatasetTrain[rowIndex][nextIndex + maritalStatus.index(personData[2])] = 1
+            nextIndex += len(maritalStatus)
+            dTreeDatasetTrain[rowIndex][nextIndex + occupation.index(personData[3])] = 1
+            nextIndex += len(occupation)
+            dTreeDatasetTrain[rowIndex][nextIndex + relationship.index(personData[4])] = 1
+            nextIndex += len(relationship)
+            dTreeDatasetTrain[rowIndex][nextIndex + race.index(personData[5])] = 1
+            nextIndex += len(race)
+            dTreeDatasetTrain[rowIndex][nextIndex + sex.index(personData[6])] = 1
+            nextIndex += len(sex)
+            dTreeDatasetTrain[rowIndex][nextIndex] = float(personData[7])//10
+            nextIndex += 1
+            dTreeDatasetTrain[rowIndex][nextIndex + country.index(personData[8])] = 1
+            nextIndex += len(country)
+            dTreeDatasetTrain[rowIndex][nextIndex + income.index(personData[9])] = 1
+
+        for rowIndex in range(testn):
+            personData = self.XTest[rowIndex]
+            nextIndex = 0
+            dTreeDatasetTest[rowIndex][0] = (float(personData[0])-15)//10
+            nextIndex += 1
+            dTreeDatasetTest[rowIndex][nextIndex + workclass.index(personData[1])] = 1
+            nextIndex += len(workclass)
+            dTreeDatasetTest[rowIndex][nextIndex + maritalStatus.index(personData[2])] = 1
+            nextIndex += len(maritalStatus)
+            dTreeDatasetTest[rowIndex][nextIndex + occupation.index(personData[3])] = 1
+            nextIndex += len(occupation)
+            dTreeDatasetTest[rowIndex][nextIndex + relationship.index(personData[4])] = 1
+            nextIndex += len(relationship)
+            dTreeDatasetTest[rowIndex][nextIndex + race.index(personData[5])] = 1
+            nextIndex += len(race)
+            dTreeDatasetTest[rowIndex][nextIndex + sex.index(personData[6])] = 1
+            nextIndex += len(sex)
+            dTreeDatasetTest[rowIndex][nextIndex] = float(personData[7])//10
+            nextIndex += 1
+            dTreeDatasetTest[rowIndex][nextIndex + country.index(personData[8])] = 1
+            nextIndex += len(country)
+            dTreeDatasetTest[rowIndex][nextIndex + income.index(personData[9])] = 1
+
+
+
+
+        self.NBdataTrain = nbDatasetTrain
+        self.DTreeDataTrain = dTreeDatasetTrain
+        self.DTreeDataTest = dTreeDatasetTest
+
+
+ 
+        return dTreeFts

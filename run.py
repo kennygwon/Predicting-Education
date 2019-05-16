@@ -79,7 +79,7 @@ def main():
     print("====================================================")
     """
 
-    data.createNBDataset()
+    dTreeFeats = data.createNBDataset()
 
     #Naive Bayes
     print("\n====================================================")
@@ -116,6 +116,8 @@ def main():
     treeTrainY = data.yTrain
     treeTestX = data.DTreeDataTest
     treeTestY = data.yTest
+  
+    print(len(treeTrainX))
 
     #train the decision tree model
     decisionTreeClassifier.trainTree(treeTrainX, treeTrainY)
@@ -126,7 +128,7 @@ def main():
     predictions = decisionTreeClassifier.testTree(treeTestX)
     #evaluate the accuracy
     dtree_score = decisionTreeClassifier.evaluate(treeTestX, treeTestY, predictions)
-    decisionTreeClassifier.visualize()
+    decisionTreeClassifier.visualize(dTreeFeats)
 
     #MFC
     print("\n====================================================")
