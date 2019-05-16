@@ -68,7 +68,7 @@ Sklearn tree.DecisionTreeClassifier, retrieved from https://scikit-learn.org/sta
 
 ---
 
-> Note: The necessary packages are necessary to run our program:
+> Note: The following packages are necessary to run our program:
 > 1) Pydotpus - Used to visualize our tree  
 >    To install you must run the following command in terminal  
 > `pip3 install pydotplus`  
