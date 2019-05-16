@@ -79,7 +79,7 @@ Sklearn tree.DecisionTreeClassifier, retrieved from https://scikit-learn.org/sta
 ---
 
 ### How to run
-With dependencies installed (see section above), execute the following commands to perform binary and multiclass classification respectively:
-`python3 main.py -t binary`
+With dependencies installed (see section above), execute the following commands to perform binary and multiclass classification respectively:  
+`python3 main.py -t binary`  
 `python3 main.py -t multiclass`
 
