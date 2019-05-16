@@ -59,18 +59,16 @@ class DecisionTree:
 
     return treeScores
 
-  def visualize(self):
+  def visualize(self, dTreeFeats):
     """
     Purpose: Prints out the decision tree so we can visualize it
-    Params: None
+    Params: dTreeFeats - a list of feature names
     Return: String representation of the decision tree
     """
-    features = ['age', 'work-class', 'marital-status', 'ocupation', 'relationship',\
-                'race','sex','hours-per-week', 'country', 'income']
     dot_data = StringIO()
 
     export_graphviz(self.dTree, out_file=dot_data,
-                    max_depth=10, feature_names= features,
+                    max_depth=3, feature_names= dTreeFeats,
                     filled=True, rounded=True,
                     rotate=True,
                     special_characters=True)
